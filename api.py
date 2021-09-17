@@ -53,28 +53,28 @@ def auth(url, headers):
     return cookie
 
 cookie = auth(url, headers)
-val = None
 
-def start(url, headers, cookie, val):
+def start(url, headers, cookie):
+    global val
     val = None
     print("Hi, Welcome to the Grandstream Networks UCM - API interaction\n**Made by FernandoM NA-LATAM Support**")
     while True:
             
-            val = (input("What would you like to do? \nPress a to go to System Configuration. \nPress b to go to Extensions\n").lower())
+            val = (input("What would you like to do? \nPress a to go to System Status. \nPress b to go to Extensions\n").lower())
             if val.lower() not in ("a", "b", "c", "d"):
                 print("This is not a valid entry")
             else:
                 break
     return val
 
-val = start(url, headers,cookie, val)
+val = start(url, headers,cookie)
 
 
 while True:
     if val == "a":
-        print("\*---------------System Configuration---------------*/")
+        print("\*---------------System Status---------------*/")
         print("Please select a valid option")
-        option=input("Select 1 to get system status \nSelect 2 to get system general status \n ")
+        option=input("Select 1 to get SYSTEM STATUS\nSelect 2 to get SYSTEM GENERAL STATUS\n ")
         if option.lower() not in ("1", "2"):
             print("This is not a valid entry for System Status")
             
@@ -91,7 +91,7 @@ while True:
             gss = rgss['response']
             print(gss)
         else:
-            start(url, headers, cookie, val)
+            start(url, headers, cookie)
     if val == "b":
         print("\*---------------Extension---------------*/\nPlease select a valid option")
         option=input("Select 1 to get the UCM extensions \nSelect 2 to get SIP Account\n ")
@@ -125,4 +125,4 @@ while True:
         print("Would you like to make another request?")
 
         
-    start(url, headers, cookie, val)
+    start(url, headers, cookie)
