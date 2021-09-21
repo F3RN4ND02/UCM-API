@@ -139,7 +139,7 @@ while True:
             print(val)
     if val == "c":
         print("\*---------------Trunk---------------*/\nPlease select a valid option")
-        option=input("Select 1 to get the List of VoIP Trunks \nSelect 2 to get SIP Account\n ")
+        option=input("Select 1 to get the List of VoIP Trunks \nSelect 2 to get Create a SIP Trunk\nSelect 3 to Get information from specific Trunk\nSelect 4 to update a specific Trunk\n ")
         if option.lower() not in ("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13", "14", "15", "16", "17", "2", ):
             print("This is not a valid entry for Trunk Menu")
         if option == "1":
@@ -155,7 +155,7 @@ while True:
             host = input("Please enter the host IP or Domain: ")
             trunk_name = input("Please enter the Trunk Name: ")
             trunk_type = input("Please enter if the trunk is peer or register, the full word: ")
-            addsiptrunk = '{"request":{"action":"addSIPTrunk", "cookie":"' + str(cookie) + '", "host":"' + str(host) + '", "trunk name":"' + str(trunk_name) + '", "trunk type":"' + str(trunk_type) + '"}}'
+            addsiptrunk = '{"request":{"action":"addSIPTrunk", "cookie":"' + str(cookie) + '", "host":"' + str(host) + '", "trunk_name":"' + str(trunk_name) + '", "trunk_type":"' + str(trunk_type) + '"}}'
             add_sip_trunk = requests.post(url, headers=headers, data=addsiptrunk, verify=False)
             # Formatting to JSON
             json_sip_trunk = add_sip_trunk.json()
@@ -167,11 +167,57 @@ while True:
             print(response_siptrunk)
             # Print the status code
             print(codestatus)
-            
+            # Print the variable val (value)
             print(val)
+        if option == "3":
+            print("*--Get information from specific trunk--*")
+            print("TO GET INFORMATION FROM A SPECIFIC TRUNK YOU WILL *ONLY* NEED ITS INDEX NUMBER, WE HAVE GOT THIS FOR YOU: \n")
+            listVoIPtrunk = '{"request":{"action":"listVoIPTrunk", "cookie":"' + str(cookie) + '", "options":"trunk_index,trunk_name,host,trunk_type,username,technology,ldap_sync_enable,trunks.out_of_service"}}'
+            responsevoiptrunk = requests.post(url, headers=headers, data=listVoIPtrunk, verify=False)
+            json_voip = responsevoiptrunk.json()
+            rvoiptrunk = json_voip['response']
+            print(rvoiptrunk)
+            trunk_index = input("Please enter the trunk index\n")
+            getSIPTrunk = '{"request":{"action":"getSIPTrunk", "cookie":"' + str(cookie) + '", "trunk":"' + str(trunk_index) + '" }}'
+            res_trunk_info = requests.post(url, headers=headers, data=getSIPTrunk, verify=False)
+            json_trunk_info = res_trunk_info.json()
+            trunkinfo = json_trunk_info['response']
+            print(trunkinfo)
+        if option == "4":
+            print("*Update the SIP Trunk*")
+            print("TO UPDATE A SPECIFIC TRUNK YOU WILL NEED ITS INDEX NUMBER, WE HAVE GOT THIS FOR YOU: \n")
+            listVoIPtrunk = '{"request":{"action":"listVoIPTrunk", "cookie":"' + str(cookie) + '", "options":"trunk_index,trunk_name,host,trunk_type,username,technology,ldap_sync_enable,trunks.out_of_service"}}'
+            responsevoiptrunk = requests.post(url, headers=headers, data=listVoIPtrunk, verify=False)
+            json_voip = responsevoiptrunk.json()
+            rvoiptrunk = json_voip['response']
+            print(rvoiptrunk)
+            print("What field would you like to update?\n")
+            edit_trunk = input("Press 1 to update the supported codecs, multiples can be set (example ulaw, alaw, ...), Press 2 to allow calls without registration, Press 3 to authenticate trunk, Press 4 to add an Authentication ID, Press 5 to Auto record, Press 6 To enable CC service, Press 7 To select the maximum number of CCSS agents, Press 8 to set the  maximum number of monitor structures which may be created for this device, Press 9 to enable CC service, Press 10 to edit the Caller ID Name, Press 11 to edit the Caller ID Number, Press 12 to enable Direct callback, Press 13 to edit DID Mode, Press 14 to Configures the mode for sending DTMF, Press 15 to Configures the mode for sending DTM   ")
+            trunk_name = input("Please enter the Trunk Name: ")
+            trunk_type = input("Please enter if the trunk is peer or register, the full word: ")
+            addsiptrunk = '{"request":{"action":"addSIPTrunk", "cookie":"' + str(cookie) + '", "host":"' + str(host) + '", "trunk_name":"' + str(trunk_name) + '", "trunk_type":"' + str(trunk_type) + '"}}'
+            add_sip_trunk = requests.post(url, headers=headers, data=addsiptrunk, verify=False)
+            # Formatting to JSON
+            json_sip_trunk = add_sip_trunk.json()
+            # Get the response in a variable
+            response_siptrunk = json_sip_trunk['response']
+            # Get the status code into a variable
+            codestatus = json_sip_trunk['status']
+            # Print the reponse
+            print(response_siptrunk)
+            # Print the status code
+            print(codestatus)
+            # Print the variable val (value)
+            print(val)    
     else:
         print("Would you like to make another request?")
     
 
         
     start(url, headers, cookie)
+ 
+"""
+This is the API Guide
+
+https://www.grandstream.com/hubfs/Product_Documentation/UCM_API_Guide.pdf?hsLang=en
+"""
