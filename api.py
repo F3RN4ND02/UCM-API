@@ -1,64 +1,15 @@
+import tabulate
 import requests
 from requests.api import post
-import urllib3
-import hashlib
-import tabulate
-urllib3.disable_warnings()
 from tabulate import tabulate
+import authfile
+url = authfile.url
+cookie = authfile.cookie
+headers = authfile.headers
 
-# The UCM url :port/api
 
-# urlinput = input("Please enter the IP Address and port in this formar <IP>:<PORT>\n (No need to put https:// either /api)\n")
-# url = 'https://' + str(urlinput) + '/api'
 
-url = "https://172.16.1.77:8089/api" #Delete this
-
-headers = {
-    'Content-Type': 'application/json;charset=UTF-8',
-    'Connection': 'close',
-}
-
-def auth(url, headers):
-    
-    data = '{"request": {"action":"challenge","user":"cdrapi","version":"1.0"}}'
-
-    # First send the challenge to the UCM.
-
-    response = requests.post(url, headers=headers, data=data, verify=False)
-
-    # Get the challenge into variable.
-
-    a = response.json()
-    b = a['response']
-    c = b['challenge']
-
-    print("This is the challenge number: " + c)
-
-    # Getting the challenge with the UCM Api Password with MD5
-    # e = input("Please enter the UCM - API Password\n")
-    e = "cdrapi123" # Delete this
-    user = c+e
-    h = hashlib.md5(user.encode())
-    md = h.hexdigest()
-    print("This is the Token: " + md)
-
-    datas = '{"request":{"action":"login", "token":"' + str(md) + '", "url":"' + str(url) + '" , "user": "cdrapi"}}'
-
-    #Send the token to get the Cookie
-
-    response2 = requests.post(url, headers=headers, data=datas, verify=False)
-
-    #Getting the cookie into a variable
-
-    f = response2.json()
-    g = f['response']
-    cookie = g['cookie']
-
-    print("This is the Cookie: " +cookie)
-
-    return cookie
-
-cookie = auth(url, headers)
+# authfile
 
 def start(url, headers, cookie):
     global val
@@ -102,7 +53,7 @@ while True:
             start(url, headers, cookie)
     if val == "b":
         print("\*---------------Extension---------------*/\nPlease select a valid option")
-        table = [["1","List the accounts"],["2","UCM extensions"],["3","List SIP account"]]
+        table = [["1","List the accounts"],["2","UCM extensions"],["3","Edit Extensions"]]
         header = ["Select", "Option"]
         print(tabulate(table, header, tablefmt="rst", colalign=("center",)))
         option=input("")
@@ -132,13 +83,19 @@ while True:
             print(codestatus)
             print(pext)
         if option == "3":
-            extension = input("Would you like to get the SIP account of what extension? Please input\n if there is not a valid ext this will return an error\n")
-            sipaccount = '{"request":{"action":"getSIPAccount", "cookie":"' + str(cookie) + '", "extension":"' + str(extension) + '" }}'
+            extension = input("Would you like to get the SIP account of what callforward? Please input\n if there is not a valid ext this will return an error\n")
+            cfudt = input("CFU destination type\n")
+            cfu = input("CFU\n if there is not a valid ext this will return an error\n")
+            
+            sipaccount = '{"request":{"action":"updateSIPAccount", "cookie":"' + str(cookie) + '","extension":"' + str(extension) + '","cfu":"' + str(cfu) + '"}}'
+            #, "cfu":"' + str(cfu) + '"  "cfu_destination_type":"' + str(cfudt) + '" 
             request_sip_account = requests.post(url, headers=headers, data=sipaccount, verify=False)
             # Formatting to JSON
             json_sip_account = request_sip_account.json()
             # Get the response in a variable
             response_SIP_account = json_sip_account['response']
+            # resxtension = json_sip_account['extension']
+            
             # Get the status code into a variable
             codestatus = json_sip_account['status']
             # Print the reponse
@@ -146,6 +103,8 @@ while True:
             # Print the status code
             print(codestatus)
             print(val)
+            
+            
     if val == "c":
         print("\*---------------Trunk---------------*/\nPlease select a valid option")
         table = [["1","List VoiP trunks"],["2","Add SIP Trunk"],["3","Get SIP trunk"],["4","Update SIP trunk"],["5","Delete SIP trunk"],["6","List Analog trunk"],["7","Add Analog trunk"],["8","Get Analog trunk"],["9","Update Analog trunk"],["10","Delete Analog trunk"],["11","Add SLA trunk"],["12","Update SLA trunk"],["13","List Digital trunk"],["14","Add Digital trunk"],["15","Get Digital trunk"],["16","Update Digital trunk"],["17","Delete Digital trunk"]]
@@ -242,16 +201,7 @@ while True:
                 print(codestatus)
                 # Print the variable val (value)
                 print(val)
-                postta = '{"request":{"action":"applyChanges", "cookie":"' + str(cookie) + '"}}'
-                format_to_json = requests.post(url, headers=headers, data=postta, verify=False)
-                jsonresponse = format_to_json.json()
-                # Get the response in a variable
-                presponse = jsonresponse['response']
-                # Get the status code into a variable
-                codestatus = jsonresponse['status']
-                # Print the reponse
-                print(presponse)
-                print(codestatus)
+                
             if option == "3":
                 print("Authenticate trunk")
                 print("If enabled, UCM will respond to incoming calls with 401 message to authenticate the trunk.")

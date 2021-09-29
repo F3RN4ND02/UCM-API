@@ -1,5 +1,4 @@
 
-
 def function1():
     var1 = input("writesomething1")
     var2 = input("write something 2")
@@ -12,10 +11,6 @@ def function2(var1, var2, var3):
 var1, var2, var3 = function1()
 function2(var1, var2, var3)
 
-
-function1()
-
-def function3(var1, var2, var3):
-    print(var1 + var2 + var3)
-   
-function3(var1, var2, var3)
+#a=25
+a = None
+print(a)
