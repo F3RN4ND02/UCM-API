@@ -3,9 +3,7 @@ from authfile import cookie
 from authfile import headers
 import requests
 from requests.api import post
-url = url
-cookie = cookie
-headers = headers
+
 
 def applyChangesfunc(url, headers, cookie):
     q = input("Are you sure you would like to apply changes?\nPlease enter only Y for Yes and N for No")
