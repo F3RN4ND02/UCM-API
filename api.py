@@ -11,6 +11,21 @@ headers = authfile.headers
 
 # authfile
 
+def apply(url, headers, cookie)
+    variable_apply = '{"request":{"action":"applyChanges", "cookie":"' + str(cookie) + '"}}'
+                apply.post = requests.post(url, headers=headers, data=variable_apply, verify=False)
+                json.response = apply.post.json()
+                # Get the response in a variable
+                apply.response = json.response['response']
+                # Get the status code into a variable
+                code.status = json.response['status']
+                # Print the reponse
+                print(apply.response)
+                print(code.status)
+    return apply.response,code.status
+    apply.response = apply(url, headers, cookie)
+    code.status = apply(url, headers, cookie)
+
 def start(url, headers, cookie):
     global val
     val = None
