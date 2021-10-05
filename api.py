@@ -1,17 +1,11 @@
+
 import tabulate
 import requests
 from requests.api import post
 from tabulate import tabulate
-import authfile
-url = authfile.url
-cookie = authfile.cookie
-headers = authfile.headers
-
-
+from authfile import url, cookie, headers
 
 # authfile
-
-
 
 def start(url, headers, cookie):
     global val
@@ -105,6 +99,7 @@ while True:
             # Print the status code
             print(codestatus)
             print(val)
+            
             
             
     if val == "c":

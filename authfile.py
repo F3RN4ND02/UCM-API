@@ -47,7 +47,7 @@ def auth(url, headers):
     response2 = requests.post(url, headers=headers, data=datas, verify=False)
 
     #Getting the cookie into a variable
-
+    global cookie
     f = response2.json()
     g = f['response']
     cookie = g['cookie']
